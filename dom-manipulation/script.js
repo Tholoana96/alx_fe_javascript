@@ -12,9 +12,11 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
 let lastViewedQuote = sessionStorage.getItem("lastViewedQuote");
 const quoteDisplay = document.getElementById("quoteDisplay");
 
-document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+document
+  .getElementById("newQuote")
+  .addEventListener("click", displayRandomQuote);
 
-function showRandomQuote() {
+function displayRandomQuote() {
   const selectedCategory = localStorage.getItem("lastCategory") || "all";
   const filtered =
     selectedCategory === "all"
@@ -39,6 +41,7 @@ function addQuote() {
   populateCategories();
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
+  displayRandomQuote();
 }
 
 function saveQuotes() {
@@ -58,7 +61,7 @@ function populateCategories() {
 function filterQuotes() {
   const selected = document.getElementById("categoryFilter").value;
   localStorage.setItem("lastCategory", selected);
-  showRandomQuote();
+  displayRandomQuote();
 }
 
 function importFromJsonFile(event) {
@@ -91,7 +94,7 @@ function exportToJsonFile() {
 
 window.onload = () => {
   populateCategories();
-  showRandomQuote();
+  displayRandomQuote();
 };
 
 async function fetchQuotesFromServer() {
@@ -114,11 +117,3 @@ async function fetchQuotesFromServer() {
 }
 
 setInterval(fetchQuotesFromServer, 60000);
-
-function notifyConflictResolution() {
-  const banner = document.createElement("div");
-  banner.innerText = "Data synced from server. New quotes added.";
-  banner.style = "background: yellow; padding: 10px; margin: 10px 0;";
-  document.body.insertBefore(banner, quoteDisplay);
-  setTimeout(() => banner.remove(), 4000);
-}
